@@ -17,7 +17,10 @@ import { notifications } from "@mantine/notifications";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import {
+  Controller,
+  useForm,
+} from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
   CartesianGrid,
@@ -296,11 +299,25 @@ export default function MeasurementsManagementPage() {
       >
         <form onSubmit={onSubmit}>
           <Stack gap="md">
+        <Controller
+          name="value"
+          control={form.control}
+          render={({ field, fieldState }) => (
             <NumberInput
               label={t("measurements.value")}
-              value={form.watch("value")}
-              onChange={(v) => form.setValue("value", Number(v) || 0)}
+              value={field.value}
+              error={fieldState.error?.message}
+              onBlur={field.onBlur}
+              onChange={(value) => {
+                field.onChange(
+                  typeof value === "number"
+                    ? value
+                    : Number(value) || 0,
+                );
+              }}
             />
+          )}
+        />
             <TextInput
               label={t("measurements.measuredAt")}
               type="datetime-local"

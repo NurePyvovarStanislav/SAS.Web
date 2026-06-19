@@ -63,15 +63,25 @@ export default function UserMeasurementsPage() {
 
   const sensor = sensorsQuery.data?.find((s) => s.sensorId === sensorId);
 
+  const sensorBelongsToUserField =
+  sensorsQuery.isSuccess && Boolean(sensor);
+  
   const measurementsQuery = useQuery({
-    queryKey: queryKeys.measurements(sensorId ?? "", appliedFrom, appliedTo),
+    queryKey: queryKeys.measurements(
+      sensorId ?? "",
+      appliedFrom,
+      appliedTo,
+    ),
     queryFn: () =>
       measurementsApi.getBySensor({
         sensorId: sensorId!,
         from: appliedFrom,
         to: appliedTo,
       }),
-    enabled: Boolean(sensorId),
+    enabled:
+      Boolean(fieldId) &&
+      Boolean(sensorId) &&
+      sensorBelongsToUserField,
   });
 
   const applyFilters = () => {
@@ -94,6 +104,43 @@ export default function UserMeasurementsPage() {
       </>
     );
   }
+
+  if (sensorsQuery.error) {
+  return (
+    <>
+      <PageHeader title={t("measurements.title")} />
+
+      <ErrorState
+        message={getApiErrorMessage(
+          sensorsQuery.error,
+          t,
+        )}
+        onRetry={() => void sensorsQuery.refetch()}
+      />
+    </>
+  );
+}
+
+if (sensorsQuery.isLoading) {
+  return (
+    <>
+      <PageHeader title={t("measurements.title")} />
+      <Skeleton height={280} radius="md" />
+    </>
+  );
+}
+
+if (!sensor) {
+  return (
+    <>
+      <PageHeader title={t("measurements.title")} />
+
+      <EmptyState
+        title={t("errors.forbidden")}
+      />
+    </>
+  );
+}
 
   if (measurementsQuery.error) {
     return (

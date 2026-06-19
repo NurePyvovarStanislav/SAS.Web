@@ -321,16 +321,44 @@ export default function SensorsManagementPage() {
               )}
             />
             <Group grow>
-              <NumberInput
-                label={t("sensors.minValue")}
-                value={form.watch("minValue")}
-                onChange={(v) => form.setValue("minValue", Number(v) || 0)}
+              <Controller
+                name="minValue"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <NumberInput
+                    label={t("sensors.minValue")}
+                    value={field.value}
+                    error={fieldState.error?.message}
+                    onBlur={field.onBlur}
+                    onChange={(value) => {
+                      field.onChange(
+                        typeof value === "number"
+                          ? value
+                          : Number(value) || 0,
+                      );
+                    }}
+                  />
+                )}
               />
-              <NumberInput
-                label={t("sensors.maxValue")}
-                error={form.formState.errors.maxValue?.message}
-                value={form.watch("maxValue")}
-                onChange={(v) => form.setValue("maxValue", Number(v) || 0)}
+
+              <Controller
+                name="maxValue"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <NumberInput
+                    label={t("sensors.maxValue")}
+                    value={field.value}
+                    error={fieldState.error?.message}
+                    onBlur={field.onBlur}
+                    onChange={(value) => {
+                      field.onChange(
+                        typeof value === "number"
+                          ? value
+                          : Number(value) || 0,
+                      );
+                    }}
+                  />
+                )}
               />
             </Group>
             <TextInput label={t("sensors.status")} {...form.register("status")} />

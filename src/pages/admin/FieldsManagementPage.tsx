@@ -15,7 +15,10 @@ import { notifications } from "@mantine/notifications";
 import { IconEdit, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import {
+  Controller,
+  useForm,
+} from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
@@ -239,13 +242,26 @@ export default function FieldsManagementPage() {
               error={form.formState.errors.cropType?.message}
               {...form.register("cropType")}
             />
-            <NumberInput
-              label={t("fields.area")}
-              min={0.01}
-              decimalScale={2}
-              error={form.formState.errors.area?.message}
-              value={form.watch("area")}
-              onChange={(v) => form.setValue("area", Number(v) || 0)}
+            <Controller
+              name="area"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <NumberInput
+                  label={t("fields.area")}
+                  min={0.01}
+                  decimalScale={2}
+                  value={field.value}
+                  error={fieldState.error?.message}
+                  onBlur={field.onBlur}
+                  onChange={(value) => {
+                    field.onChange(
+                      typeof value === "number"
+                        ? value
+                        : Number(value) || 0,
+                    );
+                  }}
+                />
+              )}
             />
             <TextInput label={t("fields.location")} {...form.register("location")} />
             <Group justify="flex-end">
