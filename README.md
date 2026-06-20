@@ -126,13 +126,6 @@ npm run lint
 - **Export CSV** — одна entity (не `all`)
 - **Import** — multipart JSON до 10 МБ
 
-## Необхідні зміни backend
-
-- CORS для `http://localhost:5173`
-- `JsonStringEnumConverter` для enum
-- Role-based access на Fields, Sensors, Measurements, Alerts
-- `AdministrationController` + `DataAdministrationService`
-
 ## Демонстраційний сценарій
 
 1. Запустіть backend і frontend
@@ -145,7 +138,7 @@ npm run lint
 
 ## Backend репозиторій
 
-<!-- GitHub URL backend: https://github.com/your-org/SAS.Backend -->
+<!-- GitHub URL backend: https://github.com/NurePyvovarStanislav/SAS.Backend -->
 
 ---
 
